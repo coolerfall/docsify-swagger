@@ -1,0 +1,30 @@
+{
+  "name": "docsify-swagger",
+  "version": "1.0.0",
+  "description": "A plugin to load swagger document for docsify.",
+  "main": "./dist/docsify-swagger.min.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack-dev-server --config webpack.dev.config.js",
+    "publish": "yarn run build && yarn publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/coolerfall/docsify-swagger.git"
+  },
+  "keywords": [
+    "docsify",
+    "plugin",
+    "swagger"
+  ],
+  "author": "Vincnet Cheung",
+  "license": "MIT",
+  "devDependencies": {
+    "html-webpack-plugin": "4.2.0",
+    "terser-webpack-plugin": "2.3.5",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.6",
+    "webpack-dev-server": "3.10.3"
+  },
+  "dependencies": {}
+}
