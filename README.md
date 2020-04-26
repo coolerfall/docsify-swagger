@@ -6,10 +6,17 @@ A plugin to load swagger document for [docsify][1].
 Usage
 =====
 
-Add the following script in your `index.html` after docsify.
+* Add the following script in your `index.html` after docsify
 ```html
-<script src="//unpkg.com/docsify-swagger.min.js"></script>
+<script src="//unpkg.com/docsify-swagger/dist/docsify-swagger.min.js"></script>
 ```
+
+* Then add a swagger json url into your markdown
+```markdown
+[swagger](http://petstore.swagger.io/v2/swagger.json)
+```
+
+* It's recommended to add each swagger into a seprated markdown file, and add them in `_sidebar.md`. Check the example for more details.
 
 
 License
