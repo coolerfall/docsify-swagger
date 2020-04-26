@@ -2,23 +2,45 @@ import {
   h1, h2, h3, h4, paragraph, bullet, link, table, monospace, paragraphTip, strikethrough
 } from "./markdown";
 import { parse } from "./parser";
-
-let defaultOptions = {
-  cache: true,
-  showExample: true,
-  tableExpand: true,
-  tableWidth: "75%",
-};
+import extend from "extend";
 
 const SWAGGER_CONTENT_KEY = "docsify.swagger.content";
+let options = {
+  cache: true,
+  showExample: true,
+  tableWidth: "auto",
+  i18n: {
+    "en": {
+      request: "Request parameters",
+      response: "Response parameters",
+      name: "Name",
+      type: "Type",
+      required: "Required",
+      description: "Description",
+      none: "None"
+    },
+    "zh-cn": {
+      request: "请求参数",
+      response: "响应参数",
+      name: "名称",
+      type: "类型",
+      required: "是否必传",
+      description: "描述",
+      none: "无"
+    },
+    fallback: "en"
+  }
+};
 
 export function install(hook, vm) {
 
   hook.mounted(function () {
-    if (!defaultOptions.tableExpand) {
+    let tableWidth = options.tableWidth;
+    if (!tableWidth || tableWidth == "auto") {
       return;
     }
 
+    /* insert stylesheet if the width was specified */
     var head = document.head || document.getElementsByTagName("head")[0];
     var style = document.createElement("style");
     style.type = "text/css";
@@ -26,7 +48,7 @@ export function install(hook, vm) {
     style.sheet.insertRule(`
       .markdown-section table {
         display: table;
-        width: ${defaultOptions.tableWidth};
+        width: ${options.tableWidth};
       }
     `)
   });
@@ -51,7 +73,7 @@ export function install(hook, vm) {
   });
 
   function cacheMarkdown(url, markdown) {
-    if (!defaultOptions.cache) {
+    if (!options.cache) {
       return;
     }
 
@@ -67,7 +89,7 @@ export function install(hook, vm) {
 
   function loadCachedMarkdown(url) {
     let invalidMarkdown = paragraphTip(`Failed to load swagger from ${url}.`);
-    if (!defaultOptions.cache) {
+    if (!options.cache) {
       return invalidMarkdown;
     }
 
@@ -91,6 +113,7 @@ export function install(hook, vm) {
    * @return markdown of swagger 
    */
   async function swaggerToMarkdown(jsonUrl) {
+    let i18n = loadI18n();
     let response = await Docsify.get(jsonUrl, true);
     let swaggerJson = parse(response);
     let info = swaggerJson.info;
@@ -118,7 +141,7 @@ export function install(hook, vm) {
       let tag = api.tag;
       let deprecated = api.deprecated;
       let markdown = markdownMap.get(tag);
-      let summary = `${api.summary}`;
+      let summary = api.summary;
       if (deprecated) {
         summary = strikethrough(summary);
       }
@@ -127,9 +150,9 @@ export function install(hook, vm) {
 
       /* add requst parameters */
       let request = api.request;
-      markdown += h4("请求参数");
+      markdown += h4(i18n.request);
       if (request.length == 0) {
-        markdown += "无\n";
+        markdown += `${i18n.none}\n`;
       } else {
         let nestedParams = [];
         let tableData = [];
@@ -150,16 +173,15 @@ export function install(hook, vm) {
             });
           }
         }
-        markdown += table(["名称", "类型", "是否必传", "描述"], tableData)
+        markdown += table([i18n.name, i18n.type, i18n.required, i18n.description], tableData)
           + handleNestedParams(nestedParams);
       }
 
-
       /* add response parameters */
       let response = api.response;
-      markdown += h4("响应参数");
+      markdown += h4(i18n.response);
       if (response.length == 0) {
-        markdown += "无\n";
+        markdown += `${i18n.none}\n`;
       } else {
         let nestedParams = [];
         let tableData = [];
@@ -180,7 +202,7 @@ export function install(hook, vm) {
             });
           }
         }
-        markdown += table(["名称", "类型", "是否必传", "描述"], tableData)
+        markdown += table([i18n.name, i18n.type, i18n.required, i18n.description], tableData)
           + handleNestedParams(nestedParams);
       }
 
@@ -199,6 +221,7 @@ export function install(hook, vm) {
       return "";
     }
 
+    let i18n = loadI18n();
     let childNestedParams = [];
     let markdown = "";
     nestedParams.forEach(param => {
@@ -221,11 +244,21 @@ export function install(hook, vm) {
         }
       });
 
-      markdown += bullet(param.name) + "\n" + table(["名称", "类型", "是否必传", "描述"], tableData);
+      markdown += bullet(param.name) + "\n" +
+        table([i18n.name, i18n.type, i18n.required, i18n.description], tableData);
     });
 
     return markdown + handleNestedParams(childNestedParams);
   }
+
+  function loadI18n() {
+    let href = location.href;
+    let key = Object.keys(options.i18n).find(key => {
+      return href.indexOf(key) > -1;
+    });
+
+    return options.i18n[key ? key : options.i18n["fallback"]];
+  }
 }
 
-window.$docsify["swagger"] = Object.assign(defaultOptions, window.$docsify["swagger"]);
+window.$docsify["swagger"] = extend(true, options, window.$docsify["swagger"]);
