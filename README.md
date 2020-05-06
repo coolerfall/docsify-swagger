@@ -29,18 +29,18 @@ window.$docsify = {
     cache: true,
     tableWidth: "auto",
     i18n: {
-        "en": {
-          request: "Request parameters",
-          response: "Response parameters",
-          name: "Name",
-          type: "Type",
-          required: "Required",
-          description: "Description",
-          none: "None"
-        },
-        fallback: "en"
-      }
+      "en": {
+        request: "Request parameters",
+        response: "Response parameters",
+        name: "Name",
+        type: "Type",
+        required: "Required",
+        description: "Description",
+        none: "None"
+      },
+      fallback: "en"
     }
+  }
 }
 ```
 
