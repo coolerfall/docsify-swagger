@@ -32,6 +32,6 @@
     "webpack-dev-server": "3.10.3"
   },
   "dependencies": {
-    "extend": "^3.0.2"
+    "extend": "3.0.2"
   }
 }
