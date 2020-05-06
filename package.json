@@ -1,6 +1,6 @@
 {
   "name": "docsify-swagger",
-  "version": "1.0.0-beta",
+  "version": "1.0.1",
   "description": "A plugin to load swagger document for docsify.",
   "main": "dist/docsify-swagger.min.js",
   "unpkg": "dist/docsify-swagger.min.js",
@@ -31,5 +31,7 @@
     "webpack-cli": "3.3.6",
     "webpack-dev-server": "3.10.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "extend": "3.0.2"
+  }
 }
