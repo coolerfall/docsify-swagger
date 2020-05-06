@@ -64,9 +64,18 @@ function parseParams(params, definitions) {
 }
 
 function parseNormalParam(param) {
+    let realType;
+    if (param.type == "array") {
+        let items = param.items;
+        let refType = resolveType(items.type, items.format)
+        realType = escape(`Array<${refType}>`);
+    } else {
+        realType = resolveType(param.type, param.format)
+    }
+
     return {
         name: param.name,
-        type: capitalize(resolveType(param.type, param.format)),
+        type: capitalize(realType),
         required: param.required == true,
         description: param.description,
         example: param["x-example"]
