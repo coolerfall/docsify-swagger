@@ -54,7 +54,7 @@ export function install(hook, vm) {
   });
 
   hook.beforeEach(function (content, next) {
-    let reg = new RegExp("\\[swagger\\]\\(([http|https].+)\\)");
+    let reg = new RegExp("\\[swagger\\]\\((.*)\\)");
     let group = content.match(reg);
     if (group && group[1]) {
       let swaggerJsonUrl = group[1];
