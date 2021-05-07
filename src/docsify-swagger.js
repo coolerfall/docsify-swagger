@@ -125,6 +125,17 @@ export function install(hook, vm) {
     if (info.version) {
       swaggerMarkdown += bullet(`Version: ${info.version}\n`);
     }
+    if (info.contact) {
+      let contact = info.contact;
+      let contactMarkdown = "";
+      if (contact.name) {
+        contactMarkdown = (contact.url ? link(contact.name, contact.url) : contact.name);
+        contactMarkdown += "(" + (contact.email ? link(contact.email, contact.email) : "") + ")";
+      } else if (contact.email) {
+        contactMarkdown = contact.email;
+      }
+      swaggerMarkdown += bullet(`Contact: ${contactMarkdown}\n`);
+    }
     if (info.license) {
       let license = info.license;
       swaggerMarkdown += bullet(`License: ${link(license.name, license.url)}\n`);
