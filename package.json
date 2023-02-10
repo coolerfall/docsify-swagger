@@ -1,6 +1,6 @@
 {
   "name": "docsify-swagger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A plugin to load swagger document for docsify.",
   "main": "dist/docsify-swagger.min.js",
   "unpkg": "dist/docsify-swagger.min.js",

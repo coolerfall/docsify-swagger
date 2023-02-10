@@ -54,7 +54,7 @@ export function install(hook, vm) {
   });
 
   hook.beforeEach(function (content, next) {
-    let reg = new RegExp("\\[swagger\\]\\(([http|https].+)\\)");
+    let reg = new RegExp("\\[swagger\\]\\((.*)\\)");
     let group = content.match(reg);
     if (group && group[1]) {
       let swaggerJsonUrl = group[1];
@@ -124,6 +124,17 @@ export function install(hook, vm) {
     swaggerMarkdown += paragraph(`${info.description}\n`);
     if (info.version) {
       swaggerMarkdown += bullet(`Version: ${info.version}\n`);
+    }
+    if (info.contact) {
+      let contact = info.contact;
+      let contactMarkdown = "";
+      if (contact.name) {
+        contactMarkdown = (contact.url ? link(contact.name, contact.url) : contact.name);
+        contactMarkdown += "(" + (contact.email ? link(contact.email, contact.email) : "") + ")";
+      } else if (contact.email) {
+        contactMarkdown = contact.email;
+      }
+      swaggerMarkdown += bullet(`Contact: ${contactMarkdown}\n`);
     }
     if (info.license) {
       let license = info.license;
